@@ -5,6 +5,8 @@ import { config } from './config';
 import { logger } from './utils/logger';
 import { errorMiddleware } from './middlewares/error.middleware';
 import { routes } from './routes';
+import { connectDB } from './db';
+import { startAllConsumers } from './events/consumers/all-events.consumer';
 
 const app = express();
 
@@ -23,9 +25,20 @@ app.use('/api', routes);
 app.use(errorMiddleware);
 
 // ── Start ─────────────────────────────────────────────
-app.listen(config.port, () => {
-  logger.info(`🚀 Notification Service running on http://localhost:${config.port}`);
-  logger.info(`   Environment: ${config.nodeEnv}`);
+async function bootstrap() {
+  await connectDB();
+
+  startAllConsumers().catch(err => logger.error({ err }, 'Notification consumers failed'));
+
+  app.listen(config.port, () => {
+    logger.info(`🚀 Notification Service running on http://localhost:${config.port}`);
+    logger.info(`   Environment: ${config.nodeEnv}`);
+  });
+}
+
+bootstrap().catch((err) => {
+  logger.fatal({ err }, 'Failed to start Notification Service');
+  process.exit(1);
 });
 
 export default app;

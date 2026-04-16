@@ -5,6 +5,9 @@ import { config } from './config';
 import { logger } from './utils/logger';
 import { errorMiddleware } from './middlewares/error.middleware';
 import { routes } from './routes';
+import { initDB } from './db';
+import { startPaymentConsumer } from './events/consumers/payment.consumer';
+import { startInventoryConsumer } from './events/consumers/inventory.consumer';
 
 const app = express();
 
@@ -23,9 +26,21 @@ app.use('/api', routes);
 app.use(errorMiddleware);
 
 // ── Start ─────────────────────────────────────────────
-app.listen(config.port, () => {
-  logger.info(`🚀 Order Service running on http://localhost:${config.port}`);
-  logger.info(`   Environment: ${config.nodeEnv}`);
+async function bootstrap() {
+  await initDB();
+
+  startPaymentConsumer().catch(err => logger.error({ err }, 'Payment consumer failed'));
+  startInventoryConsumer().catch(err => logger.error({ err }, 'Inventory consumer failed'));
+
+  app.listen(config.port, () => {
+    logger.info(`🚀 Order Service running on http://localhost:${config.port}`);
+    logger.info(`   Environment: ${config.nodeEnv}`);
+  });
+}
+
+bootstrap().catch((err) => {
+  logger.fatal({ err }, 'Failed to start Order Service');
+  process.exit(1);
 });
 
 export default app;

@@ -6,7 +6,7 @@ export const config = {
   port: parseInt(process.env.PORT || '4002', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   database: {
-    url: process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/payments_db',
+    url: process.env.DATABASE_URL || 'postgresql://ecom_user:ecom_pass@localhost:5432/payments_db',
   },
   kafka: {
     brokers: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),

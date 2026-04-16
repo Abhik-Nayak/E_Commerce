@@ -6,7 +6,7 @@ export const config = {
   port: parseInt(process.env.PORT || '4004', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   database: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/notifications_db',
+    uri: process.env.MONGODB_URI || 'mongodb://ecom_user:ecom_pass@localhost:27017/notifications_db?authSource=admin',
   },
   kafka: {
     brokers: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),

@@ -24,6 +24,7 @@ const createServiceProxy = (target: string, serviceName: string) =>
     },
   });
 
+router.use('/auth', createServiceProxy(config.services.user, 'auth'));
 router.use('/users', createServiceProxy(config.services.user, 'users'));
 router.use('/orders', createServiceProxy(config.services.order, 'orders'));
 router.use('/payments', createServiceProxy(config.services.payment, 'payments'));
