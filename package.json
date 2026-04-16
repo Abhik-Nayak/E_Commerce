@@ -1,0 +1,26 @@
+{
+  "name": "ecommerce-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Event-driven e-commerce microservices platform",
+  "workspaces": [
+    "gateway",
+    "user-service",
+    "order-service",
+    "payment-service",
+    "inventory-service",
+    "notification-service",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:gateway": "npm run dev -w gateway",
+    "dev:users": "npm run dev -w user-service",
+    "dev:orders": "npm run dev -w order-service",
+    "dev:payments": "npm run dev -w payment-service",
+    "dev:inventory": "npm run dev -w inventory-service",
+    "dev:notifications": "npm run dev -w notification-service",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  }
+}
